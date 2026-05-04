@@ -1,0 +1,177 @@
+<div class="image-list-container">
+  <!-- Banner Imagga - Solo imagen de fondo sin overlay -->
+  <div class="banner">
+    <div class="banner-content">
+      <h1>
+        <svg class="icon icon-image" viewBox="0 0 24 24" style="width: 50px; height: 50px;">
+          <path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z"/>
+        </svg>
+        Imagga Vision AI
+      </h1>
+      <p>Tecnología avanzada de visión artificial para análisis automático de imágenes. Detecta objetos, personas, animales, colores y conceptos con precisión profesional. Simplemente proporciona una URL de imagen y obtén una descripción detallada al instante.</p>
+    </div>
+  </div>
+
+  <div class="content-section">
+    <!-- Formulario principal sin botón -->
+    <div class="main-analysis-section">
+      <div class="analysis-intro">
+        <h2>Nuevo análisis con Imagga</h2>
+      </div>
+      
+      <app-image-form 
+        [editingItem]="editingItem"
+        (onSave)="onFormSave()"
+        (onCancel)="onFormCancel()">
+      </app-image-form>
+    </div>
+
+    <!-- Historial de análisis -->
+    <div class="history-section" *ngIf="imageHistory.length > 0">
+      <div class="section-header">
+        <h3>Historial de Análisis</h3>
+      </div>
+
+      <!-- Loading -->
+      <div *ngIf="isLoading" class="loading">
+        <div class="spinner-large"></div>
+        <p>Cargando historial...</p>
+      </div>
+
+      <!-- Error -->
+      <div *ngIf="errorMessage" class="error-message glass-effect">
+        {{ errorMessage }}
+        <button class="btn btn-sm btn-secondary" (click)="loadHistory()">Reintentar</button>
+      </div>
+
+      <!-- Lista de imágenes -->
+      <div *ngIf="!isLoading && !errorMessage" class="image-list">
+        <div *ngFor="let image of imageHistory" class="image-item glass-effect">
+          <div class="image-header">
+            <span class="image-date">{{ formatDate(image.createdAt!) }}</span>
+            <div class="image-actions">
+              <button class="btn btn-sm btn-edit" (click)="editItem(image)" title="Editar">
+                <svg class="icon" viewBox="0 0 24 24">
+                  <path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/>
+                </svg>
+              </button>
+              <button class="btn btn-sm btn-delete" (click)="deleteItem(image)" title="Eliminar">
+                <svg class="icon" viewBox="0 0 24 24">
+                  <path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/>
+                </svg>
+              </button>
+            </div>
+          </div>
+          
+          <div class="image-content">
+            <div class="image-preview">
+              <img [src]="image.inputData" [alt]="image.result" (error)="$event.target.style.display='none'">
+              <div class="image-overlay">
+                <svg class="icon" viewBox="0 0 24 24">
+                  <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm3.5 6L12 10.5 8.5 8 12 5.5 15.5 8zM12 17.5L8.5 15 12 12.5 15.5 15 12 17.5z"/>
+                </svg>
+              </div>
+            </div>
+            
+            <div class="image-info">
+              <div class="image-url">
+                <strong>
+                  <svg class="icon" viewBox="0 0 24 24">
+                    <path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H6.9C4.29 7 2.2 9.09 2.2 11.7s2.09 4.7 4.7 4.7H11v-1.9H6.9c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm5-6h4.1c2.61 0 4.7 2.09 4.7 4.7s-2.09 4.7-4.7 4.7H13v1.9h4.1c2.61 0 4.7-2.09 4.7-4.7S19.71 7 17.1 7H13v1.9z"/>
+                  </svg>
+                  URL de Imagen:
+                </strong>
+                <a [href]="image.inputData" target="_blank" class="url-link">
+                  {{ image.inputData }}
+                </a>
+              </div>
+              
+              <div class="image-description">
+                <strong>
+                  <svg class="icon icon-image" viewBox="0 0 24 24">
+                    <path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z"/>
+                  </svg>
+                  Análisis Imagga:
+                </strong>
+                <p>{{ image.result }}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Estado vacío -->
+    <div *ngIf="!isLoading && !errorMessage && imageHistory.length === 0" class="empty-state">
+      <svg class="icon" viewBox="0 0 24 24" style="width: 48px; height: 48px; margin-bottom: 16px; opacity: 0.5;">
+        <path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z"/>
+      </svg>
+      <p>Analice su primera imagen con Imagga Vision AI</p>
+    </div>
+
+    <!-- Sección de Análisis Eliminados -->
+    <div class="deleted-section" *ngIf="deletedImages.length > 0">
+      <div class="deleted-header">
+        <button class="btn btn-secondary btn-toggle-deleted" (click)="toggleDeletedSection()">
+          <svg class="icon" viewBox="0 0 24 24">
+            <path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z" 
+                  [style.transform]="showDeleted ? 'rotate(180deg)' : 'rotate(0deg)'"/>
+          </svg>
+          Análisis Eliminados ({{ deletedImages.length }})
+        </button>
+      </div>
+
+      <div class="deleted-content" *ngIf="showDeleted">
+        <div class="deleted-image-list">
+          <div *ngFor="let image of deletedImages" class="deleted-image-item">
+            <div class="image-header">
+              <span class="image-date">{{ formatDate(image.createdAt!) }}</span>
+              <div class="image-actions">
+                <button class="btn btn-sm btn-restore" (click)="restoreItem(image)" title="Restaurar">
+                  <svg class="icon" viewBox="0 0 24 24">
+                    <path d="M13 3c-4.97 0-9 4.03-9 9H1l3.89 3.89.07.14L9 12H6c0-3.87 3.13-7 7-7s7 3.13 7 7-3.13 7-7 7c-1.93 0-3.68-.79-4.94-2.06l-1.42 1.42C8.27 19.99 10.51 21 13 21c4.97 0 9-4.03 9-9s-4.03-9-9-9zm-1 5v5l4.28 2.54.72-1.21-3.5-2.08V8H12z"/>
+                  </svg>
+                </button>
+              </div>
+            </div>
+            
+            <div class="image-content">
+              <div class="image-preview">
+                <img [src]="image.inputData" [alt]="image.result" (error)="$event.target.style.display='none'">
+                <div class="image-overlay">
+                  <svg class="icon" viewBox="0 0 24 24">
+                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm3.5 6L12 10.5 8.5 8 12 5.5 15.5 8zM12 17.5L8.5 15 12 12.5 15.5 15 12 17.5z"/>
+                  </svg>
+                </div>
+              </div>
+              
+              <div class="image-info">
+                <div class="image-url">
+                  <strong>
+                    <svg class="icon" viewBox="0 0 24 24">
+                      <path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H6.9C4.29 7 2.2 9.09 2.2 11.7s2.09 4.7 4.7 4.7H11v-1.9H6.9c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm5-6h4.1c2.61 0 4.7 2.09 4.7 4.7s-2.09 4.7-4.7 4.7H13v1.9h4.1c2.61 0 4.7-2.09 4.7-4.7S19.71 7 17.1 7H13v1.9z"/>
+                    </svg>
+                    URL de Imagen:
+                  </strong>
+                  <a [href]="image.inputData" target="_blank" class="url-link">
+                    {{ image.inputData }}
+                  </a>
+                </div>
+                
+                <div class="image-description">
+                  <strong>
+                    <svg class="icon icon-image" viewBox="0 0 24 24">
+                      <path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z"/>
+                    </svg>
+                    Análisis Imagga:
+                  </strong>
+                  <p>{{ image.result }}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

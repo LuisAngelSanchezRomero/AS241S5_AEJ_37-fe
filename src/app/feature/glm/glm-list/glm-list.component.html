@@ -1,0 +1,183 @@
+<div class="glm-list-container">
+  <!-- Banner GLM 4.5 - Solo imagen de fondo sin overlay -->
+  <div class="banner">
+    <div class="banner-content">
+      <h1>
+        <svg class="icon icon-ai" viewBox="0 0 24 24" style="width: 50px; height: 50px;">
+          <path d="M12 2L13.09 8.26L22 9L13.09 15.74L12 22L10.91 15.74L2 9L10.91 8.26L12 2Z" stroke="white" stroke-width="1.5" fill="none"/>
+        </svg>
+        Chat GLM 4.5 Air
+      </h1>
+      <p>Modelo de lenguaje avanzado de propósito general. Capaz de responder preguntas complejas, generar contenido creativo, resumir textos y mantener conversaciones naturales. Potenciado por tecnología de inteligencia artificial de última generación.</p>
+    </div>
+  </div>
+
+  <div class="content-section">
+    <!-- Formulario principal sin card -->
+    <div class="main-chat-section">
+      <div class="chat-intro">
+        <h2>Nueva conversación con GLM</h2>
+      </div>
+      
+      <app-glm-form 
+        [editingItem]="editingItem"
+        (onSave)="onFormSave()"
+        (onCancel)="onFormCancel()">
+      </app-glm-form>
+    </div>
+
+    <!-- Historial como carrusel deslizante -->
+    <div class="history-section" *ngIf="chatHistory.length > 0">
+      <div class="section-header">
+        <h3>Historial de Conversaciones</h3>
+        <div class="carousel-controls">
+          <button class="carousel-btn" (click)="scrollLeft()" #scrollLeftBtn>
+            <svg class="icon" viewBox="0 0 24 24">
+              <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/>
+            </svg>
+          </button>
+          <button class="carousel-btn" (click)="scrollRight()" #scrollRightBtn>
+            <svg class="icon" viewBox="0 0 24 24">
+              <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <div class="chat-carousel" #chatCarousel>
+        <div class="chat-carousel-track">
+          <div *ngFor="let chat of chatHistory" class="chat-card">
+            <div class="chat-card-header">
+              <span class="chat-date">{{ formatDate(chat.createdAt!) }}</span>
+              <div class="chat-actions">
+                <button class="btn btn-sm btn-edit" (click)="editItem(chat)" title="Editar">
+                  <svg class="icon" viewBox="0 0 24 24">
+                    <path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/>
+                  </svg>
+                </button>
+                <button class="btn btn-sm btn-delete" (click)="deleteItem(chat)" title="Eliminar">
+                  <svg class="icon" viewBox="0 0 24 24">
+                    <path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/>
+                  </svg>
+                </button>
+              </div>
+            </div>
+            
+            <div class="chat-card-content">
+              <div class="prompt-preview">
+                <strong>Pregunta:</strong>
+                <p>{{ chat.inputData | slice:0:100 }}{{ chat.inputData.length > 100 ? '...' : '' }}</p>
+              </div>
+              
+              <div class="response-preview">
+                <strong>Respuesta:</strong>
+                <p>{{ chat.result | slice:0:120 }}{{ chat.result.length > 120 ? '...' : '' }}</p>
+                <button 
+                  *ngIf="chat.result.length > 120" 
+                  class="btn btn-sm btn-view-more" 
+                  (click)="viewFullResponse(chat)"
+                  title="Ver respuesta completa">
+                  <svg class="icon" viewBox="0 0 24 24">
+                    <path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/>
+                  </svg>
+                  Ver más
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Loading -->
+    <div *ngIf="isLoading" class="loading">
+      <div class="spinner-large"></div>
+      <p>Procesando...</p>
+    </div>
+
+    <!-- Error -->
+    <div *ngIf="errorMessage" class="error-message">
+      {{ errorMessage }}
+      <button class="btn btn-sm btn-secondary" (click)="loadHistory()">Reintentar</button>
+    </div>
+
+    <!-- Estado vacío -->
+    <div *ngIf="!isLoading && !errorMessage && chatHistory.length === 0" class="empty-state">
+      <svg class="icon" viewBox="0 0 24 24" style="width: 48px; height: 48px; margin-bottom: 16px; opacity: 0.5;">
+        <path d="M20 2H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h4l4 4 4-4h4c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-2 12H6v-2h12v2zm0-3H6V9h12v2zm0-3H6V6h12v2z"/>
+      </svg>
+      <p>Inicie su primera conversación con GLM 4.5 Air</p>
+    </div>
+
+    <!-- Sección de Conversaciones Eliminadas -->
+    <div class="deleted-section" *ngIf="deletedChats.length > 0">
+      <div class="deleted-header">
+        <button class="btn btn-secondary btn-toggle-deleted" (click)="toggleDeletedSection()">
+          <svg class="icon" viewBox="0 0 24 24">
+            <path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z" 
+                  [style.transform]="showDeleted ? 'rotate(180deg)' : 'rotate(0deg)'"/>
+          </svg>
+          Conversaciones Eliminadas ({{ deletedChats.length }})
+        </button>
+      </div>
+
+      <div class="deleted-content" *ngIf="showDeleted">
+        <div class="deleted-chat-list">
+          <div *ngFor="let chat of deletedChats" class="deleted-chat-card">
+            <div class="chat-card-header">
+              <span class="chat-date">{{ formatDate(chat.createdAt!) }}</span>
+              <div class="chat-actions">
+                <button class="btn btn-sm btn-restore" (click)="restoreItem(chat)" title="Restaurar">
+                  <svg class="icon" viewBox="0 0 24 24">
+                    <path d="M13 3c-4.97 0-9 4.03-9 9H1l3.89 3.89.07.14L9 12H6c0-3.87 3.13-7 7-7s7 3.13 7 7-3.13 7-7 7c-1.93 0-3.68-.79-4.94-2.06l-1.42 1.42C8.27 19.99 10.51 21 13 21c4.97 0 9-4.03 9-9s-4.03-9-9-9zm-1 5v5l4.28 2.54.72-1.21-3.5-2.08V8H12z"/>
+                  </svg>
+                </button>
+                <button class="btn btn-sm btn-view-more" (click)="viewFullResponse(chat)" title="Ver contenido">
+                  <svg class="icon" viewBox="0 0 24 24">
+                    <path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/>
+                  </svg>
+                </button>
+              </div>
+            </div>
+            
+            <div class="chat-card-content">
+              <div class="prompt-preview">
+                <strong>Pregunta:</strong>
+                <p>{{ chat.inputData | slice:0:100 }}{{ chat.inputData.length > 100 ? '...' : '' }}</p>
+              </div>
+              
+              <div class="response-preview">
+                <strong>Respuesta:</strong>
+                <p>{{ chat.result | slice:0:120 }}{{ chat.result.length > 120 ? '...' : '' }}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal para ver respuesta completa -->
+<div class="modal-overlay" *ngIf="showModal" (click)="closeModal()">
+  <div class="modal-content" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h3>Respuesta Completa</h3>
+      <button class="modal-close" (click)="closeModal()">
+        <svg class="icon" viewBox="0 0 24 24">
+          <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+        </svg>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div class="question-section">
+        <strong>Pregunta:</strong>
+        <p>{{ selectedChat?.inputData }}</p>
+      </div>
+      <div class="answer-section">
+        <strong>Respuesta:</strong>
+        <div class="full-response">{{ selectedChat?.result }}</div>
+      </div>
+    </div>
+  </div>
+</div>

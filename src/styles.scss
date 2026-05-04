@@ -1,0 +1,251 @@
+/* Variables CSS para temas */
+:root {
+  /* Tema Oscuro (Default) */
+  --primary-color: #1073F7;
+  --primary-hover: #0d5ae6;
+  --bg-primary: #0f0f23;
+  --bg-secondary: #1a1a2e;
+  --bg-card: #16213e;
+  --text-primary: #ffffff;
+  --text-secondary: #b8c5d6;
+  --border-color: #2d3748;
+  --glass-bg: rgba(255, 255, 255, 0.1);
+  --glass-border: rgba(255, 255, 255, 0.2);
+  --shadow: rgba(0, 0, 0, 0.3);
+  --icon-light: #DFE9F7;
+}
+
+[data-theme="light"] {
+  /* Tema Claro */
+  --primary-color: #1073F7;
+  --primary-hover: #0d5ae6;
+  --bg-primary: #f8f9fa;
+  --bg-secondary: #ffffff;
+  --bg-card: #ffffff;
+  --text-primary: #333333;
+  --text-secondary: #666666;
+  --border-color: #e2e8f0;
+  --glass-bg: rgba(255, 255, 255, 0.8);
+  --glass-border: rgba(255, 255, 255, 0.9);
+  --shadow: rgba(0, 0, 0, 0.1);
+  --icon-light: #DFE9F7;
+}
+
+/* Reset básico */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+  line-height: 1.6;
+  color: var(--text-primary);
+  background: var(--bg-primary);
+  transition: all 0.3s ease;
+  min-height: 100vh;
+  background-image: 
+    radial-gradient(circle at 20% 80%, rgba(16, 115, 247, 0.1) 0%, transparent 50%),
+    radial-gradient(circle at 80% 20%, rgba(16, 115, 247, 0.1) 0%, transparent 50%);
+}
+
+/* Efectos de vidrio templado */
+.glass-effect {
+  background: var(--glass-bg);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid var(--glass-border);
+  box-shadow: 0 8px 32px var(--shadow);
+}
+
+/* Utilidades globales */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+/* Iconos SVG */
+.icon {
+  width: 20px;
+  height: 20px;
+  fill: currentColor;
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.icon-ai {
+  color: #9333ea;
+}
+
+.icon-image {
+  color: #06b6d4;
+}
+
+/* Estilos para botones globales */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 20px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+  text-align: center;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+  
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+  
+  &:before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+    transition: left 0.5s;
+  }
+  
+  &:hover:not(:disabled):before {
+    left: 100%;
+  }
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, var(--primary-color), var(--primary-hover));
+  color: white;
+  box-shadow: 0 4px 15px rgba(16, 115, 247, 0.3);
+  
+  &:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(16, 115, 247, 0.4);
+  }
+}
+
+.btn-secondary {
+  background: var(--bg-card);
+  color: var(--text-primary);
+  border: 1px solid var(--border-color);
+  
+  &:hover:not(:disabled) {
+    background: var(--bg-secondary);
+    transform: translateY(-1px);
+  }
+}
+
+.btn-sm {
+  padding: 8px 16px;
+  font-size: 12px;
+}
+
+/* Botones oscuros para acciones */
+.btn-edit, .btn-delete {
+  background: #2d3748;
+  color: var(--icon-light);
+  border: 1px solid #4a5568;
+  
+  .icon {
+    color: var(--icon-light);
+  }
+  
+  &:hover:not(:disabled) {
+    background: #4a5568;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+  }
+}
+
+/* Formularios globales */
+.form-control {
+  display: block;
+  width: 100%;
+  padding: 12px 16px;
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--text-primary);
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  transition: all 0.3s ease;
+  
+  &:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(16, 115, 247, 0.1);
+  }
+  
+  &::placeholder {
+    color: var(--text-secondary);
+  }
+}
+
+/* Banners independientes - SIN OVERLAY DE COLOR */
+.banner {
+  position: relative;
+  padding: 80px 40px;
+  margin: 40px 0;
+  border-radius: 20px;
+  overflow: hidden;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  
+  .banner-content {
+    position: relative;
+    z-index: 2;
+    text-align: left;
+    max-width: 800px;
+    
+    h1 {
+      font-size: 3.5rem;
+      font-weight: 800;
+      color: white;
+      margin-bottom: 24px;
+      text-shadow: 2px 2px 8px rgba(0,0,0,0.9), 0 0 20px rgba(0,0,0,0.8);
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+    
+    p {
+      font-size: 1.3rem;
+      color: white;
+      line-height: 1.7;
+      text-shadow: 2px 2px 6px rgba(0,0,0,0.9), 0 0 15px rgba(0,0,0,0.7);
+      font-weight: 500;
+    }
+  }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .container {
+    padding: 0 15px;
+  }
+  
+  .banner {
+    padding: 60px 20px;
+    margin: 20px 0;
+    
+    .banner-content h1 {
+      font-size: 2.5rem;
+      flex-direction: column;
+      text-align: center;
+      gap: 16px;
+    }
+    
+    .banner-content p {
+      font-size: 1.1rem;
+    }
+  }
+}

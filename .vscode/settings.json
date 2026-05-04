@@ -1,0 +1,17 @@
+{
+  "workbench.iconTheme": "vscode-icons",
+  "workbench.colorTheme": "Tokyo Night Storm",
+  "typescript.preferences.importModuleSpecifier": "relative",
+  "angular.enable-strict-mode-prompt": false,
+  "files.associations": {
+    "*.html": "html",
+    "*.scss": "scss"
+  },
+  "emmet.includeLanguages": {
+    "typescript": "html"
+  },
+  "editor.formatOnSave": true,
+  "editor.codeActionsOnSave": {
+    "source.organizeImports": "explicit"
+  }
+}

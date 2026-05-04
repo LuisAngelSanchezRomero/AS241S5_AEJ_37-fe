@@ -1,0 +1,82 @@
+<div class="glm-form-container">
+  <div class="card glass-effect">
+    <div class="card-header">
+      <h3>
+        <svg class="icon icon-star" viewBox="0 0 24 24">
+          <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+        </svg>
+        {{ editingItem ? 'Editar Conversación' : 'Nueva Conversación con GLM' }}
+      </h3>
+    </div>
+    
+    <div class="card-body">
+      <!-- Indicador de modo edición -->
+      <div *ngIf="editingItem" style="background: #1073F7; color: white; padding: 10px; border-radius: 5px; margin-bottom: 15px;">
+        MODO EDICIÓN ACTIVO GLM - Editando ID: {{ editingItem.id }}
+      </div>
+      
+      <form (ngSubmit)="onSubmit()" #chatForm="ngForm">
+        <div class="form-group">
+          <div class="label-container">
+            <label for="prompt">
+              <svg class="icon" viewBox="0 0 24 24">
+                <path d="M21 6h-2v9H6v2c0 .55.45 1 1 1h11l4 4V7c0-.55-.45-1-1-1zm-4 6V3c0-.55-.45-1-1-1H3c-.55 0-1 .45-1 1v14l4-4h11c.55 0 1-.45 1-1z"/>
+              </svg>
+              Dígame, ¿qué desea que resuelva por usted?
+            </label>
+            <button 
+              type="button" 
+              class="question-btn"
+              (click)="insertQuestionMarks(promptTextarea)"
+              title="Insertar signos de interrogación"
+              [disabled]="isLoading">
+              ¿?
+            </button>
+          </div>
+          <textarea 
+            id="prompt"
+            name="prompt"
+            [(ngModel)]="prompt"
+            class="form-control"
+            rows="4"
+            placeholder="Permítame encargarme de ello."
+            required
+            [disabled]="isLoading"
+            #promptTextarea>
+          </textarea>
+        </div>
+
+        <div class="error-message glass-effect" *ngIf="errorMessage">
+          <svg class="icon" viewBox="0 0 24 24">
+            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+          </svg>
+          {{ errorMessage }}
+        </div>
+
+        <div class="form-actions">
+          <button 
+            type="submit" 
+            class="btn btn-primary"
+            [disabled]="isLoading || !prompt.trim()">
+            <span *ngIf="isLoading" class="spinner"></span>
+            <svg *ngIf="!isLoading" class="icon" viewBox="0 0 24 24">
+              <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/>
+            </svg>
+            {{ isLoading ? 'Procesando...' : (editingItem ? 'Actualizar Conversación' : 'Enviar Pregunta') }}
+          </button>
+          
+          <button 
+            type="button" 
+            class="btn btn-secondary"
+            (click)="cancel()"
+            [disabled]="isLoading">
+            <svg class="icon" viewBox="0 0 24 24">
+              <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+            </svg>
+            Cancelar
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
