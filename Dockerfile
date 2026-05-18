@@ -20,5 +20,5 @@ CMD ["nginx", "-g", "daemon off;"]
 # EJECUTAR LA IMÁGEN GENERADA
 # docker run -d --name as241s5-aej-37-fe -p 4200:80 50luisangelsanchezromero/as241s5_aej_37-fe:latest
 
-# SUBIR IMÁGEN GENERADA A DOCKERHUB
+# SUBIR IMÁGEN GENERADA A DOCKERHUB LISTO
 # docker push 50luisangelsanchezromero/as241s5_aej_37-fe:latest
