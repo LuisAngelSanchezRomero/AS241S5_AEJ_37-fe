@@ -3,12 +3,12 @@ name: Docker Hub
 on:
   push:
     branches:
-      - develop
-      - webflux-sql
+      - develop-fe
+      - webflux-sql-fe
   pull_request:
     branches:
-      - develop
-      - webflux-sql
+      - develop-fe
+      - webflux-sql-fe
   schedule:
     - cron: '0 13 * * *'
   workflow_dispatch:
