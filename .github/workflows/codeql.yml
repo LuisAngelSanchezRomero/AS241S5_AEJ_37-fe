@@ -1,4 +1,4 @@
-name: CodeQL Analysis
+name: CodeQL Analysis Frontend
 
 # =========================================================
 # EVENTOS QUE DISPARAN EL PIPELINE
@@ -10,6 +10,12 @@ on:
   pull_request:
     branches:
       - develop-fe
+
+# =========================================================
+# CONFIGURACIÓN GLOBAL DE ENTORNO (FIJA EL ERROR DE NODE 20)
+# =========================================================
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: 'true'
 
 jobs:
   analyze:
@@ -40,23 +46,25 @@ jobs:
         uses: actions/checkout@v4
 
       # =========================================================
-      # INICIALIZAR CODEQL
+      # INICIALIZAR CODEQL (ACTUALIZADO A V4)
       # =========================================================
       - name: Initialize CodeQL
-        uses: github/codeql-action/init@v3
+        uses: github/codeql-action/init@v4
         with:
           languages: ${{ matrix.language }}
 
       # =========================================================
-      # AUTOBUILD
+      # AUTOBUILD (ACTUALIZADO A V4)
+      # Nota: Para JS/TS, autobuild suele saltarse el paso de 
+      # compilación ya que es código interpretado, lo cual es normal.
       # =========================================================
       - name: Autobuild
-        uses: github/codeql-action/autobuild@v3
+        uses: github/codeql-action/autobuild@v4
 
       # =========================================================
-      # EJECUTAR ANÁLISIS DE CODEQL
+      # EJECUTAR ANÁLISIS DE CODEQL (ACTUALIZADO A V4)
       # =========================================================
       - name: Perform CodeQL Analysis
-        uses: github/codeql-action/analyze@v3
+        uses: github/codeql-action/analyze@v4
         with:
           category: "/language:${{matrix.language}}"
