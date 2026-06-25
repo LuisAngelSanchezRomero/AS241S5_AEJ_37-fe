@@ -1,0 +1,14 @@
+# kubectl apply -f luis-sanchez-37-service-fe.yml
+apiVersion: v1
+kind: Service
+metadata:
+  name: luis-sanchez-37-service-fe
+  namespace: luis-sanchez-37-namespace-fe
+spec:
+  type: NodePort
+  ports:
+  - port: 80             # Puerto interno del Service
+    targetPort: 80       # Puerto del contenedor (nginx)
+    nodePort: 30080      # Puerto expuesto en el nodo (30000-32767)
+  selector:
+    app: luis-sanchez-37-fe

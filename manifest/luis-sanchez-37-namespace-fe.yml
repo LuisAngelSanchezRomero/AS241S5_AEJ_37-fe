@@ -1,0 +1,5 @@
+# kubectl apply -f luis-sanchez-37-namespace-fe.yml
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: luis-sanchez-37-namespace-fe

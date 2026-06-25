@@ -1,0 +1,25 @@
+# kubectl apply -f luis-sanchez-37-deployment-fe.yml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: luis-sanchez-37-deployment-fe
+  namespace: luis-sanchez-37-namespace-fe
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: luis-sanchez-37-fe
+  template:
+    metadata:
+      labels:
+        app: luis-sanchez-37-fe
+    spec:
+      containers:
+      - name: luis-sanchez-37-container-fe
+        image: 50luisangelsanchezromero/luis-sanchez-37-fe:1.0
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 80
+        envFrom:
+        - secretRef:
+            name: luis-sanchez-37-secret-fe
