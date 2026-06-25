@@ -7,7 +7,7 @@ import { AiResult, ImageRequest } from '../interfaces/ai-result';
   providedIn: 'root'
 })
 export class PictocaptionService {
-  private readonly baseUrl = 'https://organic-space-winner-r74g496q5gfxjxx-8082.app.github.dev/v1/api/pictocaption';
+  private readonly baseUrl = 'https://fantastic-yodel-jjrxvj95vrpqfqpw7-8082.app.github.dev/v1/api/pictocaption';
 
   constructor(private http: HttpClient) { }
 
