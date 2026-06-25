@@ -34,5 +34,5 @@ jobs:
           file: Dockerfile
           push: true
           tags: |
-            ${{ secrets.DOCKERHUB_USERNAME_LUIS }}/as241s5_aej_37-fe:latest
-            ${{ secrets.DOCKERHUB_USERNAME_LUIS }}/as241s5_aej_37-fe:${{ github.sha }}
+            ${{ secrets.DOCKERHUB_USERNAME_LUIS }}/luis-sanchez-37-fe:latest
+            ${{ secrets.DOCKERHUB_USERNAME_LUIS }}/luis-sanchez-37-fe:1.0
