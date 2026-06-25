@@ -7,7 +7,7 @@ import { AiResult, ChatRequest } from '../interfaces/ai-result';
   providedIn: 'root'
 })
 export class GlmService {
-  private readonly baseUrl = 'http://localhost:8082/v1/api/glm';
+  private readonly baseUrl = 'https://organic-space-winner-r74g496q5gfxjxx-8082.app.github.dev/v1/api/glm';
 
   constructor(private http: HttpClient) { }
 
